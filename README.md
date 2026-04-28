@@ -11,7 +11,7 @@ final List<String> poliList = ["Sakit kepala", "Tolong aku"];
 > clone dulu repo nya
 
 ```
-git clone https://github.com/akufarish/belajar-flutter-hit-api.git
+git clone https://github.com/akufarish/belajar-flutter-hit-api.git flutter-hit-api
 ```
 
 > install dependency
