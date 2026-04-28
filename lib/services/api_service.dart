@@ -65,4 +65,12 @@ class ApiService {
       throw Exception("Failed to post data");
     }
   }
+
+  Future<void> deleteData(int id) async {
+    final response = await http.delete(Uri.parse("$baseUrl/$id"));
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to post data");
+    }
+  }
 }

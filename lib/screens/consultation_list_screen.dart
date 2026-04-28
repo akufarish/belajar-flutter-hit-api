@@ -28,6 +28,13 @@ class _ConsultationListScreenState extends State<ConsultationListScreen> {
     consultaion = apiService.getConsultation();
   }
 
+  void deleteData(int id) async {
+    Navigator.pop(context);
+    await apiService.deleteData(id);
+
+    refreshData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +83,22 @@ class _ConsultationListScreenState extends State<ConsultationListScreen> {
                     );
                     if (result == true) refreshData();
                   },
+                  onLongPress: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: Text("Apakah kamu mau menghapus data ini?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("Batal"),
+                        ),
+                        TextButton(
+                          onPressed: () => deleteData(item.id),
+                          child: Text("Hapus"),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               );
             },
