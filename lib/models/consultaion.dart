@@ -4,7 +4,7 @@ class Consultation {
   final DateTime date;
   final String poli;
   final String complaint;
-  // final int queueNumber;
+  final int queueNumber;
 
   Consultation({
     required this.id,
@@ -12,7 +12,7 @@ class Consultation {
     required this.date,
     required this.poli,
     required this.complaint,
-    // required this.queueNumber,
+    required this.queueNumber,
   });
 
   factory Consultation.fromJson(Map<String, dynamic> json) {
@@ -22,6 +22,7 @@ class Consultation {
       date: DateTime.parse(json["date"]),
       poli: json["poli"],
       complaint: json["complaint"],
+      queueNumber: json["queue_number"],
     );
   }
 }

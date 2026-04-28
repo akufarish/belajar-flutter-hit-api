@@ -55,6 +55,10 @@ class _ConsultationListScreenState extends State<ConsultationListScreen> {
                   isThreeLine: true,
                   contentPadding: EdgeInsets.all(10),
                   leading: Text(DateFormat("dd MMM").format(item.date)),
+                  trailing: Text(
+                    "${item.queueNumber}",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                   title: Text(item.name),
                   subtitle: Text("${item.poli} - ${item.complaint}"),
                   onTap: () async {

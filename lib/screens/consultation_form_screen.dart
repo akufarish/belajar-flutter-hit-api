@@ -139,7 +139,10 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
               decoration: InputDecoration(labelText: "Keluhan"),
             ),
 
-            ElevatedButton(onPressed: submit, child: Text("Simpan")),
+            ElevatedButton(
+              onPressed: isLoading ? null : submit,
+              child: isLoading ? CircularProgressIndicator() : Text("Simpan"),
+            ),
           ],
         ),
       ),
