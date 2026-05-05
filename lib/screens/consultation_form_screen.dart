@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hit_api/providers/consultation_provider.dart';
 import 'package:flutter_hit_api/services/api_service.dart';
+import 'package:provider/provider.dart';
 
 class ConsultationFormScreen extends StatefulWidget {
   final int? id;
@@ -30,10 +32,13 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
   String? selectedPoli;
   DateTime? selectedDate;
 
-  final List<String> poliList = ["Sakit kepala", "Tolong aku"];
-
-  bool isLoading = false;
-
+  final List<String> poliList = [
+    "Sakit kepala",
+    "Tolong aku",
+    "Poli Umum",
+    "Poli Gigi",
+    "Poli Anak",
+  ];
   @override
   void initState() {
     // TODO: implement initState
@@ -45,6 +50,10 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
     if (widget.date != null) {
       selectedDate = DateTime.parse(widget.date!);
     }
+
+    Future.microtask(() {
+      context.read<ConsultationProvider>().fetchConsultation();
+    });
   }
 
   Future<void> pickDate() async {
@@ -63,18 +72,19 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
   }
 
   void submit() async {
-    setState(() => isLoading = true);
+    final provider = context.read<ConsultationProvider>();
+    setState(() => provider.isLoading = true);
 
     try {
       if (widget.id == null) {
-        await apiService.createConsultation(
+        await provider.create(
           _nameController.text,
           selectedDate!,
           selectedPoli!,
           _complaintController.text,
         );
       } else {
-        await apiService.updateConsultation(
+        await provider.update(
           widget.id!,
           _nameController.text,
           selectedDate!,
@@ -92,6 +102,8 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<ConsultationProvider>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.id == null ? "Daftar antrian" : "Edit antrian"),
@@ -102,7 +114,14 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: "Nama Pasien"),
+              decoration: InputDecoration(
+                labelText: "Nama Pasien",
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
             SizedBox(height: 10),
             Row(
@@ -120,6 +139,7 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
                 ),
               ],
             ),
+            SizedBox(height: 12),
             DropdownButtonFormField(
               value: selectedPoli,
               decoration: InputDecoration(
@@ -133,15 +153,24 @@ class _ConsultationFormScreenState extends State<ConsultationFormScreen> {
                 selectedPoli = value!;
               },
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 12),
             TextField(
               controller: _complaintController,
-              decoration: InputDecoration(labelText: "Keluhan"),
+              decoration: InputDecoration(
+                labelText: "Keluhan",
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
-
+            SizedBox(height: 10),
             ElevatedButton(
-              onPressed: isLoading ? null : submit,
-              child: isLoading ? CircularProgressIndicator() : Text("Simpan"),
+              onPressed: provider.isLoading ? null : submit,
+              child: provider.isLoading
+                  ? CircularProgressIndicator()
+                  : Text("Simpan"),
             ),
           ],
         ),

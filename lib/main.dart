@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hit_api/providers/consultation_provider.dart';
 import 'package:flutter_hit_api/screens/consultation_list_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ConsultationProvider(),
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_hit_api/models/api_response.dart';
 import 'package:flutter_hit_api/models/consultaion.dart';
 import 'package:flutter_hit_api/models/consultation_response.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +15,10 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
-      final result = ConsultationResponse.fromJson(json);
+      final result = ApiResponse.fromJsonList(
+        json,
+        (item) => Consultation.fromJson(item),
+      );
       return result.data;
     } else {
       throw Exception("Failed to load data");
@@ -62,7 +66,7 @@ class ApiService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to post data");
+      throw Exception("Failed to update data");
     }
   }
 
@@ -70,7 +74,7 @@ class ApiService {
     final response = await http.delete(Uri.parse("$baseUrl/$id"));
 
     if (response.statusCode != 200) {
-      throw Exception("Failed to post data");
+      throw Exception("Failed to delete data");
     }
   }
 }
